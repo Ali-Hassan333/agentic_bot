@@ -1,6 +1,7 @@
 import os
 import openai
-import streamlit as st
+import panel as pn  # GUI
+pn.extension()
 from dotenv import load_dotenv
 import param
 import requests
@@ -16,7 +17,7 @@ from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
 
 load_dotenv()
 
-openai.api_key = st.text_input("Enter Your OpenAI API Key:",type="password")
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 
@@ -145,7 +146,9 @@ agent_executor = AgentExecutor(agent=agent_chain, tools=tools, verbose=True, mem
 
 
 
+import streamlit as st
 
+st.title("Agentic Chatbot")
 
 def display_user_message(message):
     st.markdown(f'<div style="background-color: #262730; border-radius: 10px; padding: 10px; margin: 10px 0; text-align: left;">{message}</div>', unsafe_allow_html=True)
