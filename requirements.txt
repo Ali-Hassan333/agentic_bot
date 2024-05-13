@@ -4,3 +4,4 @@ langchain_core
 langchain-openai
 streamlit
 python-dotenv
+wikipedia
