@@ -1,9 +1,8 @@
 import os
 import openai
-import panel as pn  # GUI
-pn.extension()
+
 from dotenv import load_dotenv
-import param
+
 import requests
 from langchain_core.pydantic_v1 import BaseModel, Field
 import datetime
