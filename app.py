@@ -1,8 +1,6 @@
 import os
 import openai
-
 from dotenv import load_dotenv
-
 import requests
 from langchain_core.pydantic_v1 import BaseModel, Field
 import datetime
@@ -12,6 +10,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.utils.function_calling import convert_to_openai_function
 from langchain.agents.format_scratchpad import format_to_openai_functions
 from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
+import wikipedia
+import streamlit as st
+
 
 
 load_dotenv()
@@ -58,7 +59,6 @@ def get_current_temperature(latitude: float, longitude: float) -> dict:
     return f'The current temperature is {current_temperature}°C'
 
 
-import wikipedia
 
 class SearchWikipediaInput(BaseModel):
     query: str = Field(..., description="Query to search Wikipedia for")
@@ -83,7 +83,7 @@ def search_wikipedia(query: str) -> str:
 tools = [get_current_temperature, search_wikipedia]
 
 functions = [convert_to_openai_function(f) for f in tools]
-model = ChatOpenAI(temperature=0).bind(functions=functions)
+model = ChatOpenAI(model="gpt-4o",temperature=0).bind(functions=functions)
 prompt = ChatPromptTemplate.from_messages([
     ("system", "You are helpful but sassy assistant"),
     MessagesPlaceholder(variable_name="chat_history"),
@@ -145,7 +145,6 @@ agent_executor = AgentExecutor(agent=agent_chain, tools=tools, verbose=True, mem
 
 
 
-import streamlit as st
 
 st.title("Agentic Chatbot")
 
@@ -192,9 +191,6 @@ if st.button('Send'):
     st.session_state['chat_history'].append((user_msg, bot_msg))
     st.rerun()
 
-# if st.button('Clear History'):
-#     st.session_state['chat_history'] = []
-#     st.rerun()
 
 for user_msg, bot_msg in st.session_state['chat_history']:
     display_user_message(user_msg)
